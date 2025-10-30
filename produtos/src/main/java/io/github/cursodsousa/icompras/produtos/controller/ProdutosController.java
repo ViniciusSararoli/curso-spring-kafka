@@ -15,9 +15,9 @@ import lombok.RequiredArgsConstructor;
 @RestController
 // Para fazer injeção de dependencia
 @RequiredArgsConstructor
-@RequestMapping("produto")
+// Endpoit a ser consumido
+@RequestMapping("produtos")
 public class ProdutosController {
-
     private final ProdutosService service;
 
     @PostMapping
@@ -28,7 +28,8 @@ public class ProdutosController {
 
     @GetMapping("{idproduto}")
     public ResponseEntity<Produtos> obterDados(@PathVariable("idproduto") Long idproduto) {
-        return service.selecionalPorId(idproduto)
+        return service
+                .selecionalPorId(idproduto)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
