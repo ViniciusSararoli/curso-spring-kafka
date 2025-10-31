@@ -1,1 +1,1 @@
-# curso-spring-kafka
+# spring-kafka-api
