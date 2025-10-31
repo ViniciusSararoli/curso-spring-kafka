@@ -19,7 +19,7 @@ public class ProdutosService {
         return repository.save(produtos);
     }
 
-    public Optional<Produtos> selecionalPorId(Long idproduto) {
+    public Optional<Produtos> selecionarPorId(Long idproduto) {
         return repository.findById(idproduto);
     }
 }
