@@ -1,4 +1,4 @@
-# curso-spring-kafka
+# spring-kafka-api
 
 
 Financial control system to help people organize their money
