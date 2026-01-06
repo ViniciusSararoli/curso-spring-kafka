@@ -19,6 +19,7 @@ public interface DetalhePedidoMapper {
     @Mapping(source = "total", target = "total")
     // Equivalente aos dados do ClientesRepresentation.java
     @Mapping(source = "dadosCliente.cpfCnpj", target = "cpfCnpj")
+    @Mapping(source = "dadosCliente.nome", target = "nomeCliente")
     @Mapping(source = "dadosCliente.email", target = "email")
     @Mapping(source = "dadosCliente.telefone", target = "telefone")
     

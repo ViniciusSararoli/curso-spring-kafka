@@ -15,6 +15,8 @@ import io.github.icompras.pedidos.controller.dto.NovoPedidoDTO;
 import io.github.icompras.pedidos.controller.mappers.PedidoMapper;
 import io.github.icompras.pedidos.model.exception.PedidoNaoEncontradoException;
 import io.github.icompras.pedidos.model.exception.ValidationException;
+import io.github.icompras.pedidos.publisher.DetalhePedidoMapper;
+import io.github.icompras.pedidos.publisher.representarion.DetalhePedidoRepresentation;
 import io.github.icompras.pedidos.service.PedidoService;
 import lombok.RequiredArgsConstructor;
 
@@ -24,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class PedidoController {
     private final PedidoService pedidoService;
     private final PedidoMapper pedidoMapper;
+    private final DetalhePedidoMapper detalhePedidoMapper;
 
     @PostMapping
     public ResponseEntity<Object> criar(@RequestBody NovoPedidoDTO novoPedidoDTO) {
@@ -40,9 +43,12 @@ public class PedidoController {
     }
 
     @GetMapping("/{idpedido}")
-    public ResponseEntity<Object> obterDetalhes(@PathVariable Long idpedido) {
-        var dadosPedido = pedidoService.selecionarPorId(idpedido);
-        return ResponseEntity.ok(dadosPedido);
+    public ResponseEntity<DetalhePedidoRepresentation> obterDetalhes(@PathVariable("idpedido") Long idpedido) {
+        return pedidoService
+                .carregarDadosPedido(idpedido)
+                .map(detalhePedidoMapper::map)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping("/pagamento")
