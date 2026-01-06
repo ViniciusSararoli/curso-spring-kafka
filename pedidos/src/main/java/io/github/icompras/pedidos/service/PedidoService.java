@@ -14,6 +14,7 @@ import io.github.icompras.pedidos.model.ItemPedido;
 import io.github.icompras.pedidos.model.Pedido;
 import io.github.icompras.pedidos.model.enums.StatusPedido;
 import io.github.icompras.pedidos.model.exception.PedidoNaoEncontradoException;
+import io.github.icompras.pedidos.publisher.PagamentoPublisher;
 import io.github.icompras.pedidos.repository.ItemPedidoRepository;
 import io.github.icompras.pedidos.repository.PedidoRepository;
 import io.github.icompras.pedidos.validator.PedidoValidator;
@@ -34,6 +35,8 @@ public class PedidoService {
 
     private final ClientesClient clientesClient;
     private final ProdutosClient produtosClient;
+
+    private final PagamentoPublisher pagamentoPublisher;
 
     /**
      * Ao finalizar a transação o pedido e seus itens serão salvos no banco de dados
@@ -90,14 +93,25 @@ public class PedidoService {
 
         if (infoPedido.isPresent()) {
             var pedidoEncontrado = infoPedido.get();
+
             if (status) {
-                pedidoEncontrado.setStatus(StatusPedido.PAGAMENTO_APROVADO);
+                prepararPublicarPedidoPago(pedidoEncontrado);
             } else {
                 pedidoEncontrado.setStatus(StatusPedido.ERRO_PAGAMENTO);
             }
             pedidoEncontrado.setObservacoes(observacoes);
             pedidoRepository.save(pedidoEncontrado);
         }
+    }
+
+    // Lógica para preparar os dados antes de publicar o evento de pagamento
+    private void prepararPublicarPedidoPago(Pedido pedidoEncontrado) {
+        pedidoEncontrado.setStatus(StatusPedido.PAGAMENTO_APROVADO);
+        // Carregar os dados do cliente e itens do pedido antes de publicar o evento
+        carregarDadosCliente(pedidoEncontrado);
+        carregarItensPedido(pedidoEncontrado);
+
+        pagamentoPublisher.publicar(pedidoEncontrado);
     }
 
     @Transactional
