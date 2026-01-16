@@ -125,9 +125,9 @@ O broker está com auto-create habilitado, mas você pode criar via UI (Clusters
 ## Teste Rápido (callback de pagamento)
 
 ```powershell
-curl --location "http://localhost:8050/pedido/callback-pagamento" ^
-	--header "api-key: 4f8b3c2a1d6e9f0b1234567890abcdef" ^
-	--header "Content-Type: application/json" ^
+curl --location "http://localhost:8050/pedido/callback-pagamento" \
+	--header "api-key: 4f8b3c2a1d6e9f0b1234567890abcdef" \
+	--header "Content-Type: application/json" \
 	--data "{\"pedidoId\":57,\"idPagamento\":\"cf92464d-5141-4787-a753-38f407dedf59\",\"status\":true,\"observacoes\":\"Sucesso no pagamento\"}"
 ```
 
@@ -156,4 +156,14 @@ O serviço publicará no tópico configurado em `icompraspedidos.config.kafka.to
 
 ---
 Com isso, qualquer pessoa (incluindo recrutadores) consegue subir o Kafka, rodar a aplicação e validar o fluxo publicando mensagens no Kafka em poucos minutos.
+
+## Para armazenar objetos está sendo utilizado o MinIO
+https://min.io/download#/windows
+# Imagem do MinIO para o Docker
+https://hub.docker.com/r/minio/minio
+
+# usar para criar imagem dentro do Docker, usar na pasta minio do prejeto servicos usando 'D:\curso-spring-kafka-main\servicos\minio'
+docker compose down && docker compose up -d
+
+
 
